@@ -1,19 +1,17 @@
-# ***REMOVED***
-##### Slync Programming Test - Twitter Client
-#### Created by AG Liber
----
+# Tweet Fresh
 
+---
 ## Build commands
 ##### Using Docker Image
-1. From `/***REMOVED***` directory execute the following commands
+1. From `/tweet-fresh` directory execute the following commands
 ```
-docker build -t agliber/***REMOVED*** .
-docker run -p 3001:3000 -d agliber/***REMOVED***
+docker build -t agliber/tweet-fresh .
+docker run -p 3001:3000 -d agliber/tweet-fresh
 ```
 2. Go to `http://localhost:3001` on your desktop browser
 
 ##### Using npm
-1. From `/***REMOVED***` directory execute the following commands
+1. From `/tweet-fresh` directory execute the following commands
 ```
 npm install
 npm start
@@ -33,10 +31,27 @@ npm start
 2. To filter tweets by text
 	- Enter text into `Search by twitter handle` click `Search` button
 
-#### Design Decisions
 
-  
-#### Future Improvements
-- Display message on no results
-- Autocomplete twitter handles
-- click on text to add filter
+## Libraries
+- create-react-app
+- react-testing-library
+- twitter (node package)
+- reactstrap
+
+### React component tree (DOM)
+
+```
+App.js 			# stores state, renders UI components, connects to API port module    
+├── ApiTwitter.js 	# Twitter API port module    
+├── FilterForm.js 	# UI Component that displays html form for user controls   
+└── TwitterFeed.js 	# UI Component that displays twitter feed   
+```
+
+### Twitter APIs used
+1. `search/tweets` to receive recent tweets by user
+2. `statuses/filter` to receive live tweet updates
+3. `user/show` to convert a twitter handle into a user id required for `statuses/filter` api
+
+
+## Contributors
+- AG Liber
