@@ -22,5 +22,11 @@ test('SearchTweets returns string', () => {
 
 });
 
+test('SearchTweets wrong params should return error', ()=>{
+  return SearchTweets({incorrectParamObject:'fake'}).catch( (error) =>{
+    expect(typeof error[0].message).toBe('string');
+  })
+})
+
 // error status 406 indicates test failed because no events returned
 // error status 420 indicates test failed because api rate limited

@@ -1,23 +1,26 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {render, fireEvent} from '@testing-library/react';
-import App from './App';
+import App from './App.js';
 import {SearchTweets,FilterRealtimeTweets} from './ApiTwitter.js';
+
 jest.mock('./ApiTwitter.js');
 
-it('renders without crashing', () => {
-  const mockValue = {
-    statuses:[
-      {
-        text:'tweet.text',
-        id:'tweet.id',
-        user:{
-          // name:tweet.user.name,
-          screen_name:'tweet.user.screen_name',
-        }
+const mockValue = {
+  statuses:[
+    {
+      text:'tweet.text',
+      id:'tweet.id',
+      user:{
+        // name:tweet.user.name,
+        screen_name:'tweet.user.screen_name',
       }
-    ]
-  };
+    }
+  ]
+};
+
+it('renders without crashing', () => {
+
   SearchTweets.mockResolvedValue(mockValue);
   const mockCallBack = jest.fn();
   FilterRealtimeTweets.mockImplementation( () => {
@@ -27,24 +30,14 @@ it('renders without crashing', () => {
     };
   } );
   const div = document.createElement('div');
-  ReactDOM.render(<App />, div);
-  ReactDOM.unmountComponentAtNode(div);
+  render(<App />, div);
+  // ReactDOM.unmountComponentAtNode(div);
 });
 
 it('FilterForm updates TwitterFeed', () => {
-  const mockSearchValue = {
-    statuses:[
-      {
-        text:'tweet.text',
-        id:'tweet.id',
-        user:{
-          // name:tweet.user.name,
-          screen_name:'tweet.user.screen_name',
-        }
-      }
-    ]
-  };
-  SearchTweets.mockResolvedValue(mockSearchValue);
+
+
+  SearchTweets.mockResolvedValue(mockValue);
   const mockCallBack = jest.fn();
   FilterRealtimeTweets.mockImplementation( () => {
     return {
@@ -52,9 +45,7 @@ it('FilterForm updates TwitterFeed', () => {
       destroy:mockCallBack
     };
   } );
-  const {getByPlaceholderText,getByText} = render(
-    <App />
-  );
+  const {getByPlaceholderText,getByText} = render(<App />);
 
   expect(getByPlaceholderText(/twitter handle/i).textContent)
   .toBe('');
@@ -69,5 +60,15 @@ it('FilterForm updates TwitterFeed', () => {
     return pElement.textContent;
   });
   expect(feedArray).not.toBeNull();
+
+});
+
+it('On Api error show error', async ()=>{
+
+  SearchTweets.mockRejectedValue([{code:'1',message:'api error'}]);
+
+  const { findByText } = render(<App/>);
+  const text = await findByText(/api error/i);
+  expect( text  ).not.toBeNull();
 
 });

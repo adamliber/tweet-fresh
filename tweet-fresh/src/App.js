@@ -63,9 +63,7 @@ class App extends Component {
 
   searchTweets = (searchParams) => {
     SearchTweets(searchParams).then( tweets => {
-
       const tweetList = tweets.statuses.map( status =>({
-
         text:status.text,
         id:status.id,
         user:{
@@ -74,6 +72,23 @@ class App extends Component {
         }
       }));
       this.setState(Object.assign({},this.state,{tweets:tweetList}) );
+    }).catch( (error) =>{
+
+      let errorText;
+      if(Array.isArray(error)){
+        errorText = `${error[0].code}: ${error[0].message}`;
+      }else{
+        errorText = `${error}`;
+      }
+      const tweetList = [{
+        text: errorText,
+        id:1,
+        user:{
+          screen_name:"error",
+        }
+      }];
+      this.setState(Object.assign({},this.state,{tweets:tweetList}) );
+
     });
 
   }
